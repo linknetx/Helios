@@ -628,16 +628,16 @@ end
 
 --- default implementation of exports, used if not overridden by the driver
 function helios_private.processExports()
-    local mainPanetargetDevice = GetDevice(0)
-    if type(mainPanetargetDevice) == "table" then
-        mainPanetargetDevice:update_arguments()
+    local mainPanelDevice = GetDevice(0)
+    if type(mainPanelDevice) == "table" then
+        mainPanelDevice:update_arguments()
 
-        helios_private.processArguments(mainPanetargetDevice, helios_private.driver.everyFrameArguments)
-        helios_private.driver.processHighImportance(mainPanetargetDevice)
+        helios_private.processArguments(mainPanelDevice, helios_private.driver.everyFrameArguments)
+        helios_private.driver.processHighImportance(mainPanelDevice)
 
         if helios_private.state.tickCount >= helios_private.exportLowTickInterval then
-            helios_private.processArguments(mainPanetargetDevice, helios_private.driver.arguments)
-            helios_private.driver.processLowImportance(mainPanetargetDevice)
+            helios_private.processArguments(mainPanelDevice, helios_private.driver.arguments)
+            helios_private.driver.processLowImportance(mainPanelDevice)
             helios_private.state.tickCount = 0
         end
     end

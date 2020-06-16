@@ -11,40 +11,40 @@ function driver.processLowImportance(mainPanelDevice)
 	if li then
 		--Helios.log.write(thisScript,string.format("UFC Dump " .. Heliosdump(li)))
 		--Helios.log.write(thisScript,string.format("UFC Comm 1: " .. helios.ensureString(li.ufc_chnl_1_m) .. helios.ensureString(li.ufc_chnl_1_v)))
-        helios.send("2092", string.format("%2s",helios.ensureString(li.ufc_left_position)))
-        helios.send("2094", string.format("%7s",helios.ensureString(li.ufc_right_position)))
-        helios.send("2095", string.format("%2s",helios.ensureString(li.ufc_chnl_1_m) .. helios.ensureString(li.ufc_chnl_1_v)))
-		helios.send("2096", string.format("%2s",helios.ensureString(li.ufc_chnl_2_m) .. helios.ensureString(li.ufc_chnl_2_v)))
+        helios.send(2092, string.format("%2s",helios.ensureString(li.ufc_left_position)))
+        helios.send(2094, string.format("%7s",helios.ensureString(li.ufc_right_position)))
+        helios.send(2095, string.format("%2s",helios.ensureString(li.ufc_chnl_1_m) .. helios.ensureString(li.ufc_chnl_1_v)))
+		helios.send(2096, string.format("%2s",helios.ensureString(li.ufc_chnl_2_m) .. helios.ensureString(li.ufc_chnl_2_v)))
 	--[ufc_left_position]  string: "ON"
     --[ufc_right_position] = string: "16"
 	end
 
  	local li = helios.parseIndication(6)
 	if li then
-		helios.send("2082", string.format("%4s",helios.ensureString(li.ODU_Option_1_Text)))
-		helios.send("2083", string.format("%4s",helios.ensureString(li.ODU_Option_2_Text)))
-		helios.send("2084", string.format("%4s",helios.ensureString(li.ODU_Option_3_Text)))
-		helios.send("2085", string.format("%4s",helios.ensureString(li.ODU_Option_4_Text)))
-		helios.send("2086", string.format("%4s",helios.ensureString(li.ODU_Option_5_Text)))
-		helios.send("2087", string.format("%1s",helios.ensureString(li.ODU_Option_1_Slc)):gsub(":","!"))  -- ":" is reserved
-		helios.send("2088", string.format("%1s",helios.ensureString(li.ODU_Option_2_Slc)):gsub(":","!"))  -- ":" is reserved
-		helios.send("2089", string.format("%1s",helios.ensureString(li.ODU_Option_3_Slc)):gsub(":","!"))  -- ":" is reserved
-		helios.send("2090", string.format("%1s",helios.ensureString(li.ODU_Option_4_Slc)):gsub(":","!"))  -- ":" is reserved
-		helios.send("2091", string.format("%1s",helios.ensureString(li.ODU_Option_5_Slc)):gsub(":","!"))  -- ":" is reserved
+		helios.send(2082, string.format("%4s",helios.ensureString(li.ODU_Option_1_Text)))
+		helios.send(2083, string.format("%4s",helios.ensureString(li.ODU_Option_2_Text)))
+		helios.send(2084, string.format("%4s",helios.ensureString(li.ODU_Option_3_Text)))
+		helios.send(2085, string.format("%4s",helios.ensureString(li.ODU_Option_4_Text)))
+		helios.send(2086, string.format("%4s",helios.ensureString(li.ODU_Option_5_Text)))
+		helios.send(2087, string.format("%1s",helios.ensureString(li.ODU_Option_1_Slc)):gsub(":","!"))  -- ":" is reserved
+		helios.send(2088, string.format("%1s",helios.ensureString(li.ODU_Option_2_Slc)):gsub(":","!"))  -- ":" is reserved
+		helios.send(2089, string.format("%1s",helios.ensureString(li.ODU_Option_3_Slc)):gsub(":","!"))  -- ":" is reserved
+		helios.send(2090, string.format("%1s",helios.ensureString(li.ODU_Option_4_Slc)):gsub(":","!"))  -- ":" is reserved
+		helios.send(2091, string.format("%1s",helios.ensureString(li.ODU_Option_5_Slc)):gsub(":","!"))  -- ":" is reserved
 		-- -- test command 00000000*2096=20:2095=13:2087=!:2088=!:2089=!:2090=!:2091=!:2082=BLUE:2083=FIN :2084=BIMA:2085=2019:2086=test:2094=123.567:2092=~0:2093=-:326=1:336=1:197=1:365=1:196=1: 
 	end
  	local li = helios.parseIndication(7)  --V/UHF Radio and ACNIP
 	if li then
-		helios.send("2100", string.format("%2s",helios.ensureString(li.uvhf_channel)))
-		helios.send("2101", string.format("%7s",helios.ensureString(li.uvhf_freq_left)))
-		helios.send("2102", string.format("%s",helios.ensureString(li.acnip_1_label_mode)))
-		helios.send("2103", string.format("%s",helios.ensureString(li.acnip_1_mode)))
-		helios.send("2104", string.format("%s",helios.ensureString(li.acnip_1_label_code)))
-		helios.send("2105", string.format("%s",helios.ensureString(li.acnip_1_code)))		
-		helios.send("2106", string.format("%s",helios.ensureString(li.acnip_2_label_mode)))
-		helios.send("2107", string.format("%s",helios.ensureString(li.acnip_2_mode)))
-		helios.send("2108", string.format("%s",helios.ensureString(li.acnip_2_label_code)))
-		helios.send("2109", string.format("%s",helios.ensureString(li.acnip_2_code)))
+		helios.send(2100, string.format("%2s",helios.ensureString(li.uvhf_channel)))
+		helios.send(2101, string.format("%7s",helios.ensureString(li.uvhf_freq_left)))
+		helios.send(2102, string.format("%s",helios.ensureString(li.acnip_1_label_mode)))
+		helios.send(2103, string.format("%s",helios.ensureString(li.acnip_1_mode)))
+		helios.send(2104, string.format("%s",helios.ensureString(li.acnip_1_label_code)))
+		helios.send(2105, string.format("%s",helios.ensureString(li.acnip_1_code)))		
+		helios.send(2106, string.format("%s",helios.ensureString(li.acnip_2_label_mode)))
+		helios.send(2107, string.format("%s",helios.ensureString(li.acnip_2_mode)))
+		helios.send(2108, string.format("%s",helios.ensureString(li.acnip_2_label_code)))
+		helios.send(2109, string.format("%s",helios.ensureString(li.acnip_2_code)))
 	end	
 
     helios.send(2001, string.format("%.0f",mainPanelDevice:get_argument_value(253) * 1000+mainPanelDevice:get_argument_value(254) * 100+mainPanelDevice:get_argument_value(255) * 10))     -- Engine Duct

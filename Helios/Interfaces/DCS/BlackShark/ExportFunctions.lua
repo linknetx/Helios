@@ -10,28 +10,28 @@ function driver.processHighImportance(mainPanelDevice)
     -- getting the UV26 data
     local li = helios.parseIndication(7)  -- 7 for UV26
 	if li then
-		helios.send("2005", string.format("%s",helios.ensureString(li.txt_digits)))
+		helios.send(2005, string.format("%s",helios.ensureString(li.txt_digits)))
 	end
 
    -- getting the EKRAN data
     local li = helios.parseIndication(4)  -- 4 for EKRAN
 	if li then
-        helios.send("2006", string.format("%s",helios.ensureString(li.txt_queue)))
-        helios.send("2007", string.format("%s",helios.ensureString(li.txt_failure)))
-		helios.send("2008", string.format("%s",helios.ensureString(li.txt_memory)))
+        helios.send(2006, string.format("%s",helios.ensureString(li.txt_queue)))
+        helios.send(2007, string.format("%s",helios.ensureString(li.txt_failure)))
+		helios.send(2008, string.format("%s",helios.ensureString(li.txt_memory)))
 	end
 
 	-- getting the PVI display data
     local li = helios.parseIndication(5)  -- 75 for PVI
 	if li then
-		helios.send("2009", string.format("%s",helios.ensureString(li.txt_VIT)))
-		helios.send("2010", string.format("%s",helios.ensureString(li.txt_VIT_apostrophe1)))
-        helios.send("2011", string.format("%s",helios.ensureString(li.txt_VIT_apostrophe2)))
-		helios.send("2012", string.format("%s",helios.ensureString(li.txt_OIT_PPM)))
-		helios.send("2013", string.format("%s",helios.ensureString(li.txt_NIT)))
-		helios.send("2014", string.format("%s",helios.ensureString(li.txt_NIT_apostrophe1)))
-		helios.send("2015", string.format("%s",helios.ensureString(li.txt_NIT_apostrophe2)))
-		helios.send("2016", string.format("%s",helios.ensureString(li.txt_OIT_NOT)))
+		helios.send(2009, string.format("%s",helios.ensureString(li.txt_VIT)))
+		helios.send(2010, string.format("%s",helios.ensureString(li.txt_VIT_apostrophe1)))
+        helios.send(2011, string.format("%s",helios.ensureString(li.txt_VIT_apostrophe2)))
+		helios.send(2012, string.format("%s",helios.ensureString(li.txt_OIT_PPM)))
+		helios.send(2013, string.format("%s",helios.ensureString(li.txt_NIT)))
+		helios.send(2014, string.format("%s",helios.ensureString(li.txt_NIT_apostrophe1)))
+		helios.send(2015, string.format("%s",helios.ensureString(li.txt_NIT_apostrophe2)))
+		helios.send(2016, string.format("%s",helios.ensureString(li.txt_OIT_NOT)))
 	end
 end
 
@@ -73,9 +73,9 @@ function driver.processLowImportance(mainPanelDevice)
 	local lEkranText = lEKRAN:get_actual_text_frame()
 	local lEkranSendString = string.sub(lEkranText,1,8).."\n"..string.sub(lEkranText,12,19).."\n"..string.sub(lEkranText,23,30).."\n"..string.sub(lEkranText,34,41) 
 	
-	helios.send("2001",lStationType)
-	helios.send("2002",lStationCount)
-	helios.send("2003",lCannonAmmoCount)
-	helios.send("2004",lEkranSendString)
-	helios.send("2017", string.format("%7.3f", l828Radio:get_frequency()/1000000))
+	helios.send(2001,lStationType)
+	helios.send(2002,lStationCount)
+	helios.send(2003,lCannonAmmoCount)
+	helios.send(2004,lEkranSendString)
+	helios.send(2017, string.format("%7.3f", l828Radio:get_frequency()/1000000))
 end
