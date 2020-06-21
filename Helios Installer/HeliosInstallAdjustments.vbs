@@ -19,8 +19,9 @@ else
    ' https://docs.microsoft.com/en-us/windows/win32/msi/database-object
    ' https://docs.microsoft.com/en-us/windows/win32/msi/session-object
 
-   ' upgrade code for Helios 1.4+ (production)
+   ' upgrade codes for Helios 1.4+ (production)
    Dim heliosUpgrade:heliosUpgrade = "{589D8667-3ED9-478B-8F67-A56E4FADBC63}"
+   Dim keypressUpgrade:keypressUpgrade = "{EC3AC978-542C-4062-B6D0-F652A7C3E134}" 
    Dim upgradeCode:upgradeCode = heliosUpgrade
    
    ' upgrade code for Helios Development Prototypes
@@ -31,6 +32,13 @@ else
    Dim database : Set database = installer.OpenDatabase(msiPackage, 1) : CheckError "open database"
    Dim session : Set session = installer.OpenPackage(database,1) : If Err <> 0 Then Fail "Installer: '" & msiPackage & "' has invalid installer package format"
 
+   ' check product (this script is shared)
+   if session.Property("ProductName") = "Helios Keypress Receiver" then
+        Wscript.Echo "configuring Helios Keypress Receiver Installer"
+        upgradeCode = keypressUpgrade
+   end if
+
+   ' change product version and file versions
    Execute database, "UPDATE Property SET `Value` = '" & version & "' WHERE `Property` = 'ProductVersion'"
    Execute database, "UPDATE File SET `Version` = '" & infinity & "' WHERE `Version` <> ''"
 
@@ -45,16 +53,18 @@ else
    Set devBuild = New RegExp
    devBuild.Pattern = "[0-9]+\.[0-9]+\.1...\.[0-9]+"
    if devBuild.Test(version) then
-     upgradeCode = heliosDevUpgrade
-
      Execute database, "DELETE FROM Shortcut WHERE `Directory_` = 'DesktopFolder'"
      Execute database, "UPDATE Shortcut SET `Name` = 'CONTRO~1|Dev Control Center Debug' WHERE `Name` = 'CONTRO~1|Control Center Debug'"
      Execute database, "UPDATE Shortcut SET `Name` = 'PROFIL~1|Dev Profile Editor Debug' WHERE `Name` = 'PROFIL~1|Profile Editor Debug'"
      Execute database, "UPDATE Shortcut SET `Name` = 'HELIOS~2|Dev Helios Profile Editor' WHERE `Name` = 'HELIOS~2|Helios Profile Editor'"
      Execute database, "UPDATE Shortcut SET `Name` = 'HELIOS~4|Dev Helios Control Center' WHERE `Name` = 'HELIOS~4|Helios Control Center'"
 
-     Execute database, "UPDATE Property SET `Value` = '" & heliosDevUpgrade & "' WHERE `Property` = 'UpgradeCode'"
-     Execute database, "UPDATE Property SET `Value` = 'HeliosDev' WHERE `Property` = 'ProductName'"
+     if session.Property("ProductName") = "Helios" then
+         Wscript.Echo "Changing product to HeliosDev"
+         upgradeCode = heliosDevUpgrade
+         Execute database, "UPDATE Property SET `Value` = '" & heliosDevUpgrade & "' WHERE `Property` = 'UpgradeCode'"
+         Execute database, "UPDATE Property SET `Value` = 'HeliosDev' WHERE `Property` = 'ProductName'"
+     end if
 
      Execute database, "UPDATE Directory SET `DefaultDir` = 'HELIOS~1|HeliosDev' WHERE `DefaultDir` = 'HELIOS|Helios'"
    end if

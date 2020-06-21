@@ -23,6 +23,7 @@ REM publish installer files to direct share for testers and developers
 mkdir %HELIOS_SHARE_FOLDER%\%HELIOS_BUILT_VERSION%
 copy "Helios Installer\Release\*.msi" %HELIOS_SHARE_FOLDER%\%HELIOS_BUILT_VERSION%\ 
 copy "Helios Installer\Release32\*.msi" %HELIOS_SHARE_FOLDER%\%HELIOS_BUILT_VERSION%\ 
+copy "Keypress Receiver Installer\Release\*.msi" %HELIOS_SHARE_FOLDER%\%HELIOS_BUILT_VERSION%\ 
 
 REM collect and format log
 FOR /F %%i IN ('git rev-parse %HELIOS_BUILT_VERSION%') DO @set COMMIT=%%i
@@ -35,7 +36,7 @@ if exist "..\Releases\Helios\%HELIOS_BUILT_VERSION%\Assets" (
 	rmdir /s /q "..\Releases\Helios\%HELIOS_BUILT_VERSION%"
 )
 mkdir ..\Releases\Helios\%HELIOS_BUILT_VERSION%\Assets
-tar -a -c -f "..\Releases\Helios\%HELIOS_BUILT_VERSION%\Assets\Helios_Installers.zip" -C "Helios Installer\Release" *.msi 
+tar -a -c -f "..\Releases\Helios\%HELIOS_BUILT_VERSION%\Assets\Helios_Installers.zip" -C "Helios Installer\Release" *.msi -C "Keypress Receiver Installer\Release" *.msi
 tar -a -c -f "..\Releases\Helios\%HELIOS_BUILT_VERSION%\Assets\Helios32Bit_Installers.zip" -C "Helios Installer\Release32" *.msi
 echo Helios %HELIOS_BUILT_VERSION% > "..\Releases\Helios\%HELIOS_BUILT_VERSION%\changes.md"
 echo.>> "..\Releases\Helios\%HELIOS_BUILT_VERSION%\changes.md"

@@ -51,6 +51,8 @@ if ERRORLEVEL 2 (
 
 REM clean up
 rmdir /s /q "Helios Installer\Release"
+rmdir /s /q "Helios Installer\Release32"
+rmdir /s /q "Keypress Receiver Installer\Release"
 MSBuild.exe -binaryLogger:LogFile=clean.binlog -clp:WarningsOnly -warnAsMessage:MSB4078 -p:Configuration=Release;Platform=x64 -t:Clean Helios.sln
 MSBuild.exe -binaryLogger:LogFile=clean32.binlog -clp:WarningsOnly -warnAsMessage:MSB4078 -p:Configuration=Release;Platform=AnyCPU32 -t:Clean Helios.sln
 rmdir /s /q bin
@@ -77,6 +79,10 @@ echo backing up "Helios Installer\Helios32bit Installer.vdproj" to "Helios Insta
 move "Helios Installer\Helios32bit Installer.vdproj" "Helios Installer\Helios32bit Installer.vdproj.bak"
 echo generating modified "Helios Installer\Helios32bit Installer.vdproj" 
 powershell -Command "(gc 'Helios Installer\Helios32bit Installer.vdproj.bak') -replace '1\.6\.1000\.0\.msi', '%HELIOS_BUILT_VERSION%.msi' | Set-Content 'Helios Installer\Helios32bit Installer.vdproj'"
+echo backing up "Keypress Receiver Installer\Keypress Receiver Installer.vdproj" to "Keypress Receiver Installer\Keypress Receiver Installer.vdproj.bak" 
+move "Keypress Receiver Installer\Keypress Receiver Installer.vdproj" "Keypress Receiver Installer\Keypress Receiver Installer.vdproj.bak"
+echo generating modified "Keypress Receiver Installer\Keypress Receiver Installer.vdproj" 
+powershell -Command "(gc 'Keypress Receiver Installer\Keypress Receiver Installer.vdproj.bak') -replace '1\.6\.1000\.0\.msi', '%HELIOS_BUILT_VERSION%.msi' | Set-Content 'Keypress Receiver Installer\Keypress Receiver Installer.vdproj'"
 
 REM build installers; this requires https://stackoverflow.com/questions/8648428/an-error-occurred-while-validating-hresult-8000000a/45580775#45580775
 devenv Helios.sln /Build "JustInstallers|x64"
@@ -87,11 +93,14 @@ echo restoring "Helios Installer\Helios Installer.vdproj" from "Helios Installer
 move "Helios Installer\Helios Installer.vdproj.bak" "Helios Installer\Helios Installer.vdproj"
 echo restoring "Helios Installer\Helios32bit Installer.vdproj" from "Helios Installer\Helios32bit Installer.vdproj.bak" 
 move "Helios Installer\Helios32bit Installer.vdproj.bak" "Helios Installer\Helios32bit Installer.vdproj"
+echo restoring "Keypress Receiver Installer\Keypress Receiver Installer.vdproj" from "Keypress Receiver Installer\Keypress Receiver Installer.vdproj.bak" 
+move "Keypress Receiver Installer\Keypress Receiver Installer.vdproj.bak" "Keypress Receiver Installer\Keypress Receiver Installer.vdproj"
 
 REM fix up setup loaders
 echo renaming setup executables
 move "Helios Installer\Release\setup.exe" "Helios Installer\Release\Helios.%HELIOS_BUILT_VERSION%.Setup.exe"
 move "Helios Installer\Release32\setup.exe" "Helios Installer\Release32\Helios32bit.%HELIOS_BUILT_VERSION%.Setup.exe"
+move "Keypress Receiver Installer\Release\setup.exe" "Keypress Receiver Installer\Release\Helios Keypress Receiver.%HELIOS_BUILT_VERSION%.Setup.exe"
 
 REM fix up installers
 pushd "Helios Installer\Release"
@@ -99,4 +108,7 @@ cscript //nologo ..\HeliosInstallAdjustments.vbs "Helios.%HELIOS_BUILT_VERSION%.
 popd
 pushd "Helios Installer\Release32"
 cscript //nologo ..\HeliosInstallAdjustments.vbs "Helios32bit.%HELIOS_BUILT_VERSION%.msi" %HELIOS_BUILT_VERSION%
+popd
+pushd "Keypress Receiver Installer\Release"
+cscript //nologo "..\..\Helios Installer\HeliosInstallAdjustments.vbs" "Helios Keypress Receiver.%HELIOS_BUILT_VERSION%.msi" %HELIOS_BUILT_VERSION%
 popd
