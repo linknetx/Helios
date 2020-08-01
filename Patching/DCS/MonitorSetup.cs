@@ -333,6 +333,10 @@ namespace GadrocsWorkshop.Helios.Patching.DCS
         {
             ShadowMonitor renamed = _monitors[e.OldKey];
             _monitors.Remove(e.OldKey);
+            if (_monitors.ContainsKey(e.NewKey))
+            {
+                throw new Exception("logic error: collapsed one monitor's records into another during reset; please file a bug");
+            }
             _monitors[e.NewKey] = renamed;
         }
 
