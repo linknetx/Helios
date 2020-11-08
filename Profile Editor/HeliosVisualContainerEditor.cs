@@ -1,4 +1,5 @@
 ﻿//  Copyright 2014 Craig Courtney
+//  Copyright 2020 Ammo Goettsch
 //    
 //  Helios is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -13,6 +14,7 @@
 //  You should have received a copy of the GNU General Public License
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Diagnostics;
 using System.Windows.Controls;
 
 namespace GadrocsWorkshop.Helios.ProfileEditor
@@ -36,8 +38,8 @@ namespace GadrocsWorkshop.Helios.ProfileEditor
     {
         private bool _keyMoveBatchOpen = false;
 
-        private DrawingBrush _checkerBrush;
-        private Pen _borderPen = new Pen(Brushes.Black, 6d);
+        private readonly DrawingBrush _checkerBrush;
+        private readonly Pen _borderPen = new Pen(Brushes.Black, 6d);
 
         // Mouse state vairables for mouse interactions
         private EditorMouseState _mouseState;     // Current mode for mouse interactions
@@ -45,14 +47,14 @@ namespace GadrocsWorkshop.Helios.ProfileEditor
         private Vector _dragVector = new Vector(0d, 0d);  // Offset of current mouse position based off of mouse down position
         private Point _panningOffset; // the scroller offsets when we started panning
 
-        private SnapManager _snapManager = new SnapManager();
+        private readonly SnapManager _snapManager = new SnapManager();
 
         private SelectionAdorner _selectionAdorner;
         private DragSelectionAdorner _dragSelectionAdorner;
 
-        private CalibrationPointCollectionDouble _zoomCalibration;
+        private readonly CalibrationPointCollectionDouble _zoomCalibration;
 
-        private HeliosVisualView _view;
+        private readonly HeliosVisualView _view;
 
         static HeliosVisualContainerEditor()
         {
@@ -827,40 +829,99 @@ namespace GadrocsWorkshop.Helios.ProfileEditor
 
         private static void MoveForward_Executed(object target, ExecutedRoutedEventArgs e)
         {
-            HeliosVisualContainerEditor editor = target as HeliosVisualContainerEditor;
-            if (editor != null)
-            {
-                ConfigManager.UndoManager.StartBatch();
-                foreach (HeliosVisual control in editor.VisualContainer.Children.Reverse())
-                {
-                    if (editor.SelectedItems.Contains(control))
-                    {
-                        ConfigManager.UndoManager.AddUndoItem(new DisplayOrderUndoItem(editor.VisualContainer, control, true));
-                        editor.VisualContainer.Children.MoveUp(control);
-                    }
-                }
-                ConfigManager.UndoManager.CloseBatch();
-            }
+            (target as HeliosVisualContainerEditor)?.MoveSelectedItemsForward();
+
         }
 
         private static void MoveBack_Executed(object target, ExecutedRoutedEventArgs e)
         {
-            HeliosVisualContainerEditor editor = target as HeliosVisualContainerEditor;
-            if (editor != null)
-            {
-                ConfigManager.UndoManager.StartBatch();
-                for (int i = 0; i < editor.VisualContainer.Children.Count; i++)
-                {
-                    HeliosVisual control = editor.VisualContainer.Children[i];
-                    if (editor.SelectedItems.Contains(control))
-                    {
-                        ConfigManager.UndoManager.AddUndoItem(new DisplayOrderUndoItem(editor.VisualContainer, control, false));
-                        editor.VisualContainer.Children.MoveDown(control);
-                    }
-                }
-                ConfigManager.UndoManager.CloseBatch();
-            }
+            (target as HeliosVisualContainerEditor)?.MoveSelectedItemsBack();
         }
+
+        public void MoveSelectedItemsForward()
+        {
+            ConfigManager.UndoManager.StartBatch();
+            foreach (HeliosVisual control in VisualContainer.Children.Reverse())
+            {
+                if (SelectedItems.Contains(control))
+                {
+                    ConfigManager.UndoManager.AddUndoItem(new DisplayOrderUndoItem(VisualContainer, control, true));
+                    VisualContainer.Children.MoveUp(control);
+                }
+            }
+            ConfigManager.UndoManager.CloseBatch();
+        }
+
+        public void MoveSelectedItemsBack()
+        {
+            ConfigManager.UndoManager.StartBatch();
+            for (int i = 0; i < VisualContainer.Children.Count; i++)
+            {
+                HeliosVisual control = VisualContainer.Children[i];
+                if (SelectedItems.Contains(control))
+                {
+                    ConfigManager.UndoManager.AddUndoItem(new DisplayOrderUndoItem(VisualContainer, control, false));
+                    VisualContainer.Children.MoveDown(control);
+                }
+            }
+
+            ConfigManager.UndoManager.CloseBatch();
+        }
+
+        public void MoveSelectedItemsForwardFully()
+        {
+            ConfigManager.UndoManager.StartBatch();
+            int lastChild = VisualContainer.Children.Count - 1;
+            int newPosition = lastChild;
+            for (int i = lastChild; i >= 0; i--)
+            {
+                HeliosVisual control = VisualContainer.Children[i];
+                if (!SelectedItems.Contains(control))
+                {
+                    continue;
+                }
+
+                if (i != newPosition)
+                {
+                    // perform the move
+                    MoveVisualUndoItem undoItem = new MoveVisualUndoItem(VisualContainer, control, i, newPosition);
+                    ConfigManager.UndoManager.AddUndoItem(undoItem);
+                    undoItem.Do();
+                }
+
+                // next item goes ahead of here
+                newPosition--;
+            }
+            ConfigManager.UndoManager.CloseBatch();
+        }
+
+        public void MoveSelectedItemsBackFully()
+        {
+            ConfigManager.UndoManager.StartBatch();
+            int newPosition = 0;
+            for (int i = 0; i < VisualContainer.Children.Count; i++)
+            {
+                HeliosVisual control = VisualContainer.Children[i];
+                if(!SelectedItems.Contains(control))
+                {
+                    continue;
+                }
+
+                if (i != newPosition)
+                {
+                    // perform the move
+                    MoveVisualUndoItem undoItem = new MoveVisualUndoItem(VisualContainer, control, i, newPosition);
+                    ConfigManager.UndoManager.AddUndoItem(undoItem);
+                    undoItem.Do();
+                }
+
+                // next item goes after this one
+                newPosition++;
+            }
+
+            ConfigManager.UndoManager.CloseBatch();
+        }
+
 
         private static void AlignTop_Executed(object target, ExecutedRoutedEventArgs e)
         {
@@ -1354,6 +1415,36 @@ namespace GadrocsWorkshop.Helios.ProfileEditor
             }
         }
 
-#endregion
+        private class MoveVisualUndoItem: IUndoItem
+        {
+            private readonly HeliosVisualContainer _visualContainer;
+            private readonly HeliosVisual _control;
+            private readonly int _oldPosition;
+            private readonly int _newPosition;
+
+            public MoveVisualUndoItem(HeliosVisualContainer visualContainer, HeliosVisual control, int oldPosition, int newPosition)
+            {
+                _visualContainer = visualContainer;
+                _control = control;
+                _oldPosition = oldPosition;
+                _newPosition = newPosition;
+            }
+
+            public void Undo()
+            {
+                Debug.Assert(ReferenceEquals(_control, _visualContainer.Children[_newPosition]));
+                _visualContainer.Children.Move(_newPosition, _oldPosition);
+                Debug.Assert(ReferenceEquals(_control, _visualContainer.Children[_oldPosition]));
+            }
+
+            public void Do()
+            {
+                Debug.Assert(ReferenceEquals(_control, _visualContainer.Children[_oldPosition]));
+                _visualContainer.Children.Move(_oldPosition, _newPosition);
+                Debug.Assert(ReferenceEquals(_control, _visualContainer.Children[_newPosition]));
+            }
+        }
+
+        #endregion
     }
 }

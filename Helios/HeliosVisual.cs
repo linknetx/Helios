@@ -37,7 +37,7 @@ namespace GadrocsWorkshop.Helios
         private HeliosVisualRotation _rotation = HeliosVisualRotation.None;
 
         private bool _locked;
-        private bool _snapable = true;
+        private bool _snapTarget = true;
         private bool _hidden;
         private bool _defaultHidden;
 
@@ -208,16 +208,16 @@ namespace GadrocsWorkshop.Helios
         /// </summary>
         public bool IsSnapTarget
         {
-            get => _snapable;
+            get => _snapTarget;
             set
             {
-                if (_snapable.Equals(value))
+                if (_snapTarget.Equals(value))
                 {
                     return;
                 }
 
-                bool oldValue = _snapable;
-                _snapable = value;
+                bool oldValue = _snapTarget;
+                _snapTarget = value;
                 OnPropertyChanged("IsSnapTarget", oldValue, value, true);
             }
         }

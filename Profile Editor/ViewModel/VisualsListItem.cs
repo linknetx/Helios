@@ -1,4 +1,5 @@
 //  Copyright 2014 Craig Courtney
+//  Copyright 2020 Helios Contributors
 //    
 //  Helios is free software: you can redistribute it and/or modify
 //  it under the terms of the GNU General Public License as published by
@@ -17,31 +18,29 @@ namespace GadrocsWorkshop.Helios.ProfileEditor.ViewModel
 {
     public class VisualsListItem : NotificationObject
     {
-        private HeliosVisual _control;
         private bool _selected;
 
         public VisualsListItem(HeliosVisual control, bool isSelected)
         {
-            _control = control;
+            Control = control;
             _selected = isSelected;
         }
 
-        public HeliosVisual Control { get { return _control; } }
+        public HeliosVisual Control { get; }
 
         public bool IsSelected
         {
-            get
-            {
-                return _selected;
-            }
+            get => _selected;
             set
             {
-                if (!_selected.Equals(value))
+                if (_selected.Equals(value))
                 {
-                    bool oldValue = _selected;
-                    _selected = value;
-                    OnPropertyChanged("IsSelected", oldValue, value, false);
+                    return;
                 }
+
+                bool oldValue = _selected;
+                _selected = value;
+                OnPropertyChanged("IsSelected", oldValue, value, false);
             }
         }
     }

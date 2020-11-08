@@ -104,11 +104,11 @@ namespace GadrocsWorkshop.Helios.ControlCenter
 
             if (Preferences.StartMinimized)
             {
-                Minimize();
+                MinimizeWindow();
             }
             else
             {
-                Maximize();
+                ShowNormalWindow();
             }
 
             LoadProfileList(PreferencesFile.LoadSetting("ControlCenter", "LastProfile", ""));
@@ -354,12 +354,12 @@ namespace GadrocsWorkshop.Helios.ControlCenter
 
         #endregion
 
-        private void Minimize()
+        private void MinimizeWindow()
         {
             WindowState = System.Windows.WindowState.Minimized;
         }
 
-        internal void Maximize()
+        internal void ShowNormalWindow()
         {
             PowerButton.IsChecked = true;
             WindowState = System.Windows.WindowState.Normal;
@@ -479,7 +479,7 @@ namespace GadrocsWorkshop.Helios.ControlCenter
 
         private void OpenControlCenter_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            Maximize();
+            ShowNormalWindow();
         }
 
         private void TogglePreferences_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -642,7 +642,7 @@ namespace GadrocsWorkshop.Helios.ControlCenter
 
             if (Preferences.AutoHide)
             {
-                Minimize();
+                MinimizeWindow();
             }
             else
             {
@@ -741,12 +741,12 @@ namespace GadrocsWorkshop.Helios.ControlCenter
 
         private void Profile_ShowControlCenter(object sender, EventArgs e)
         {
-            Maximize();
+            ShowNormalWindow();
         }
 
         private void Profile_HideControlCenter(object sender, EventArgs e)
         {
-            Minimize();
+            MinimizeWindow();
         }
 
         void Profile_ProfileStopped(object sender, EventArgs e)
@@ -1097,7 +1097,7 @@ namespace GadrocsWorkshop.Helios.ControlCenter
 
         private void HideButton_Clicked(object sender, RoutedEventArgs e)
         {
-            Minimize();
+            MinimizeWindow();
         }
 
         #endregion
@@ -1154,7 +1154,7 @@ namespace GadrocsWorkshop.Helios.ControlCenter
 
         void HotKeyPressed(HotKey obj)
         {
-            Maximize();
+            ShowNormalWindow();
         }
 
         #endregion

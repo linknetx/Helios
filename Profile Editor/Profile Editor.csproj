@@ -368,7 +368,18 @@
   <ItemGroup>
     <Resource Include="about.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Resource Include="ToolbarGraphics\LockedPlusIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ToolbarGraphics\UnLockedPlusIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ToolbarGraphics\BringForwardFullyIcon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="ToolbarGraphics\SendBackFullyIcon.png" />
+  </ItemGroup>
   <Import Project="..\HeliosExecutable.targets" />
   <PropertyGroup>
     <PostBuildEvent>
