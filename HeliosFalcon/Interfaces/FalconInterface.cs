@@ -33,6 +33,7 @@ namespace GadrocsWorkshop.Helios.Interfaces.Falcon
         const string falconRootKey = @"SOFTWARE\WOW6432Node\Benchmark Sims\";
         private FalconTypes _falconType;
         private string _falconPath;
+        private string _currentTheater;
         private string _pilotCallsign;
         private string _keyFile;
         private string _cockpitDatFile;
@@ -51,6 +52,7 @@ namespace GadrocsWorkshop.Helios.Interfaces.Falcon
             FalconType = FalconTypes.BMS;
             _falconVersions = GetFalconVersions();
             _falconPath = GetFalconPath();
+            _currentTheater = GetCurrentTheater();
             _pilotCallsign = GetpilotCallsign();
             
             _dataExporter = new BMS.BMSFalconDataExporter(this);
@@ -84,6 +86,8 @@ namespace GadrocsWorkshop.Helios.Interfaces.Falcon
         }
 
         #region Properties
+
+        public string CurrentTheater { get { return _currentTheater; } }
 
         public string PilotCallsign { get { return _pilotCallsign; } }
         
@@ -293,6 +297,22 @@ namespace GadrocsWorkshop.Helios.Interfaces.Falcon
             if (pathKey != null)
             {
                 pathValue = (string)pathKey.GetValue("baseDir");
+            }
+            else
+            {
+                pathValue = "";
+            }
+            return pathValue;
+        }
+        public string GetCurrentTheater()
+        {
+            RegistryKey pathKey = null;
+            string pathValue = null;
+            pathKey = Registry.LocalMachine.OpenSubKey(falconRootKey + FalconVersion);
+
+            if (pathKey != null)
+            {
+                pathValue = (string)pathKey.GetValue("curTheater");
             }
             else
             {

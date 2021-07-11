@@ -54,6 +54,16 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\MapControl.cs" />
+    <Compile Include="Controls\MapControlWaypointsEditor.xaml.cs">
+      <DependentUpon>MapControlWaypointsEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MapControlUserMapsEditor.xaml.cs">
+      <DependentUpon>MapControlUserMapsEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MapControlBaseMapsEditor.xaml.cs">
+      <DependentUpon>MapControlBaseMapsEditor.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Gauges\Altimeter.cs" />
     <Compile Include="Interfaces\BMS\BMSFalconDataExporter.cs" />
     <Compile Include="Interfaces\BMS\BMSLightBits.cs" />
@@ -122,6 +132,18 @@
     <Resource Include="Images\Textures\rwr.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\MapControlWaypointsEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MapControlUserMapsEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MapControlBaseMapsEditor.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Interfaces\FalconCallbackValueEditor.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -131,9 +153,38 @@
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MapControl\Map Bullseye 64.png" />
+    <Resource Include="Images\MapControl\Map Bullseye 128.png" />
+    <Resource Include="Images\MapControl\Map Range Rings.png" />
+    <Resource Include="Images\MapControl\Map Aircraft.png" />
+    <Resource Include="Images\MapControl\Map No Data.png" />
+    <Resource Include="Images\MapControl\Foreground.png" />
+    <Resource Include="Images\MapControl\Background.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\MapControl\MapOverlay_15.png" />
+    <Resource Include="Images\MapControl\MapOverlay_30.png" />
+    <Resource Include="Images\MapControl\MapOverlay_60.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\Maps\Aegean\Map.jpg" />
+    <Resource Include="Images\Maps\Balkans\Map.jpg" />
+    <Resource Include="Images\Maps\CentralEurope\Map.jpg" />
+    <Resource Include="Images\Maps\EMF\Map.jpg" />
+    <Resource Include="Images\Maps\Iberia\Map.jpg" />
+    <Resource Include="Images\Maps\Ikaros\Map.jpg" />
+    <Resource Include="Images\Maps\Israel\Map.jpg" />
+    <Resource Include="Images\Maps\Korea\Map.jpg" />
+    <Resource Include="Images\Maps\Kuwait\Map.jpg" />
+    <Resource Include="Images\Maps\Libya\Map.jpg" />
+    <Resource Include="Images\Maps\Nevada\Map.jpg" />
+    <Resource Include="Images\Maps\Nordic\Map.jpg" />
+    <Resource Include="Images\Maps\Panama\Map.jpg" />
+    <Resource Include="Images\Maps\Taiwan\Map.jpg" />
   </ItemGroup>
   <Import Project="..\HeliosPlugin.targets" />
 </Project>
