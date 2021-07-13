@@ -315,6 +315,7 @@ namespace GadrocsWorkshop.Helios.Controls
 			MapControlResize(true);
 			MapScaleChange(2d);
 			ShowNoDataPanel();
+			Refresh();
 
 			EndTriggerBypass(true);
 		}
@@ -933,9 +934,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapWaypointImage_15 == null && value != null)
 					|| (_mapWaypointImage_15 != null && !_mapWaypointImage_15.Equals(value)))
 				{
-					string oldValue = _mapWaypointImage_15;
 					_mapWaypointImage_15 = value;
-					OnPropertyChanged("WaypointImage_15", oldValue, value, true);
 				}
 			}
 		}
@@ -951,9 +950,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapWaypointImage_30 == null && value != null)
 					|| (_mapWaypointImage_30 != null && !_mapWaypointImage_30.Equals(value)))
 				{
-					string oldValue = _mapWaypointImage_30;
 					_mapWaypointImage_30 = value;
-					OnPropertyChanged("WaypointImage_30", oldValue, value, true);
 				}
 			}
 		}
@@ -969,9 +966,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapWaypointImage_60 == null && value != null)
 					|| (_mapWaypointImage_60 != null && !_mapWaypointImage_60.Equals(value)))
 				{
-					string oldValue = _mapWaypointImage_60;
 					_mapWaypointImage_60 = value;
-					OnPropertyChanged("WaypointImage_60", oldValue, value, true);
 				}
 			}
 		}
@@ -987,10 +982,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[0, 1] == null && value != null)
 					|| (_mapUserImages[0, 1] != null && !_mapUserImages[0, 1].Equals(value)))
 				{
-					string oldValue = _mapUserImages[0, 1];
 					_mapUserImages[0, 1] = value;
-					OnPropertyChanged("UserMapImage_201", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1006,10 +998,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[0, 3] == null && value != null)
 					|| (_mapUserImages[0, 3] != null && !_mapUserImages[0, 3].Equals(value)))
 				{
-					string oldValue = _mapUserImages[0, 3];
 					_mapUserImages[0, 3] = value;
-					OnPropertyChanged("UserMapName_201", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1026,10 +1015,7 @@ namespace GadrocsWorkshop.Helios.Controls
 
 				if (_mapUserImages[0, 2] != newValue)
 				{
-					string oldValue = _mapUserImages[0, 2];
 					_mapUserImages[0, 2] = newValue;
-					OnPropertyChanged("UserMapSize_201", oldValue, newValue, true);
-					Refresh();
 				}
 			}
 		}
@@ -1045,10 +1031,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[1, 1] == null && value != null)
 					|| (_mapUserImages[1, 1] != null && !_mapUserImages[1, 1].Equals(value)))
 				{
-					string oldValue = _mapUserImages[1, 1];
 					_mapUserImages[1, 1] = value;
-					OnPropertyChanged("UserMapImage_202", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1064,10 +1047,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[1, 3] == null && value != null)
 					|| (_mapUserImages[1, 3] != null && !_mapUserImages[1, 3].Equals(value)))
 				{
-					string oldValue = _mapUserImages[1, 3];
 					_mapUserImages[1, 3] = value;
-					OnPropertyChanged("UserMapName_202", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1084,10 +1064,7 @@ namespace GadrocsWorkshop.Helios.Controls
 
 				if (_mapUserImages[1, 2] != newValue)
 				{
-					string oldValue = _mapUserImages[1, 2];
 					_mapUserImages[1, 2] = newValue;
-					OnPropertyChanged("UserMapSize_202", oldValue, newValue, true);
-					Refresh();
 				}
 			}
 		}
@@ -1103,10 +1080,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[2, 1] == null && value != null)
 					|| (_mapUserImages[2, 1] != null && !_mapUserImages[2, 1].Equals(value)))
 				{
-					string oldValue = _mapUserImages[2, 1];
 					_mapUserImages[2, 1] = value;
-					OnPropertyChanged("UserMapImage_203", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1122,10 +1096,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[2, 3] == null && value != null)
 					|| (_mapUserImages[2, 3] != null && !_mapUserImages[2, 3].Equals(value)))
 				{
-					string oldValue = _mapUserImages[2, 3];
 					_mapUserImages[2, 3] = value;
-					OnPropertyChanged("UserMapName_203", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1142,10 +1113,7 @@ namespace GadrocsWorkshop.Helios.Controls
 
 				if (_mapUserImages[2, 2] != newValue)
 				{
-					string oldValue = _mapUserImages[2, 2];
 					_mapUserImages[2, 2] = newValue;
-					OnPropertyChanged("UserMapSize_203", oldValue, newValue, true);
-					Refresh();
 				}
 			}
 		}
@@ -1161,10 +1129,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[3, 1] == null && value != null)
 					|| (_mapUserImages[3, 1] != null && !_mapUserImages[3, 1].Equals(value)))
 				{
-					string oldValue = _mapUserImages[3, 1];
 					_mapUserImages[3, 1] = value;
-					OnPropertyChanged("UserMapImage_204", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1180,10 +1145,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[3, 3] == null && value != null)
 					|| (_mapUserImages[3, 3] != null && !_mapUserImages[3, 3].Equals(value)))
 				{
-					string oldValue = _mapUserImages[3, 3];
 					_mapUserImages[3, 3] = value;
-					OnPropertyChanged("UserMapName_204", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1200,10 +1162,7 @@ namespace GadrocsWorkshop.Helios.Controls
 
 				if (_mapUserImages[3, 2] != newValue)
 				{
-					string oldValue = _mapUserImages[3, 2];
 					_mapUserImages[3, 2] = newValue;
-					OnPropertyChanged("UserMapSize_204", oldValue, newValue, true);
-					Refresh();
 				}
 			}
 		}
@@ -1219,10 +1178,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[4, 1] == null && value != null)
 					|| (_mapUserImages[4, 1] != null && !_mapUserImages[4, 1].Equals(value)))
 				{
-					string oldValue = _mapUserImages[4, 1];
 					_mapUserImages[4, 1] = value;
-					OnPropertyChanged("UserMapImage_205", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1238,10 +1194,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[4, 3] == null && value != null)
 					|| (_mapUserImages[4, 3] != null && !_mapUserImages[4, 3].Equals(value)))
 				{
-					string oldValue = _mapUserImages[4, 3];
 					_mapUserImages[4, 3] = value;
-					OnPropertyChanged("UserMapName_205", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1258,10 +1211,7 @@ namespace GadrocsWorkshop.Helios.Controls
 
 				if (_mapUserImages[4, 2] != newValue)
 				{
-					string oldValue = _mapUserImages[4, 2];
 					_mapUserImages[4, 2] = newValue;
-					OnPropertyChanged("UserMapSize_205", oldValue, newValue, true);
-					Refresh();
 				}
 			}
 		}
@@ -1277,10 +1227,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[5, 1] == null && value != null)
 					|| (_mapUserImages[5, 1] != null && !_mapUserImages[5, 1].Equals(value)))
 				{
-					string oldValue = _mapUserImages[5, 1];
 					_mapUserImages[5, 1] = value;
-					OnPropertyChanged("UserMapImage_206", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1296,10 +1243,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[5, 3] == null && value != null)
 					|| (_mapUserImages[5, 3] != null && !_mapUserImages[5, 3].Equals(value)))
 				{
-					string oldValue = _mapUserImages[5, 3];
 					_mapUserImages[5, 3] = value;
-					OnPropertyChanged("UserMapName_206", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1316,10 +1260,7 @@ namespace GadrocsWorkshop.Helios.Controls
 
 				if (_mapUserImages[5, 2] != newValue)
 				{
-					string oldValue = _mapUserImages[5, 2];
 					_mapUserImages[5, 2] = newValue;
-					OnPropertyChanged("UserMapSize_206", oldValue, newValue, true);
-					Refresh();
 				}
 			}
 		}
@@ -1335,10 +1276,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[6, 1] == null && value != null)
 					|| (_mapUserImages[6, 1] != null && !_mapUserImages[6, 1].Equals(value)))
 				{
-					string oldValue = _mapUserImages[6, 1];
 					_mapUserImages[6, 1] = value;
-					OnPropertyChanged("UserMapImage_207", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1354,10 +1292,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[6, 3] == null && value != null)
 					|| (_mapUserImages[6, 3] != null && !_mapUserImages[6, 3].Equals(value)))
 				{
-					string oldValue = _mapUserImages[6, 3];
 					_mapUserImages[6, 3] = value;
-					OnPropertyChanged("UserMapName_207", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1374,10 +1309,7 @@ namespace GadrocsWorkshop.Helios.Controls
 
 				if (_mapUserImages[6, 2] != newValue)
 				{
-					string oldValue = _mapUserImages[6, 2];
 					_mapUserImages[6, 2] = newValue;
-					OnPropertyChanged("UserMapSize_207", oldValue, newValue, true);
-					Refresh();
 				}
 			}
 		}
@@ -1393,10 +1325,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[7, 1] == null && value != null)
 					|| (_mapUserImages[7, 1] != null && !_mapUserImages[7, 1].Equals(value)))
 				{
-					string oldValue = _mapUserImages[7, 1];
 					_mapUserImages[7, 1] = value;
-					OnPropertyChanged("UserMapImage_208", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1412,10 +1341,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapUserImages[7, 3] == null && value != null)
 					|| (_mapUserImages[7, 3] != null && !_mapUserImages[7, 3].Equals(value)))
 				{
-					string oldValue = _mapUserImages[7, 3];
 					_mapUserImages[7, 3] = value;
-					OnPropertyChanged("UserMapName_208", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1432,10 +1358,7 @@ namespace GadrocsWorkshop.Helios.Controls
 
 				if (_mapUserImages[7, 2] != newValue)
 				{
-					string oldValue = _mapUserImages[7, 2];
 					_mapUserImages[7, 2] = newValue;
-					OnPropertyChanged("UserMapSize_208", oldValue, newValue, true);
-					Refresh();
 				}
 			}
 		}
@@ -1451,10 +1374,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[0, 3] == null && value != null)
 					|| (_mapBaseImages[0, 3] != null && !_mapBaseImages[0, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[0, 3];
 					_mapBaseImages[0, 3] = value;
-					OnPropertyChanged("BaseMapName_101", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1470,10 +1390,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[1, 3] == null && value != null)
 					|| (_mapBaseImages[1, 3] != null && !_mapBaseImages[1, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[1, 3];
 					_mapBaseImages[1, 3] = value;
-					OnPropertyChanged("BaseMapName_102", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1489,10 +1406,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[2, 3] == null && value != null)
 					|| (_mapBaseImages[2, 3] != null && !_mapBaseImages[2, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[2, 3];
 					_mapBaseImages[2, 3] = value;
-					OnPropertyChanged("BaseMapName_103", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1508,10 +1422,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[3, 3] == null && value != null)
 					|| (_mapBaseImages[3, 3] != null && !_mapBaseImages[3, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[3, 3];
 					_mapBaseImages[3, 3] = value;
-					OnPropertyChanged("BaseMapName_104", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1527,10 +1438,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[4, 3] == null && value != null)
 					|| (_mapBaseImages[4, 3] != null && !_mapBaseImages[4, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[4, 3];
 					_mapBaseImages[4, 3] = value;
-					OnPropertyChanged("BaseMapName_105", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1546,10 +1454,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[5, 3] == null && value != null)
 					|| (_mapBaseImages[5, 3] != null && !_mapBaseImages[5, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[5, 3];
 					_mapBaseImages[5, 3] = value;
-					OnPropertyChanged("BaseMapName_106", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1565,10 +1470,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[6, 3] == null && value != null)
 					|| (_mapBaseImages[6, 3] != null && !_mapBaseImages[6, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[6, 3];
 					_mapBaseImages[6, 3] = value;
-					OnPropertyChanged("BaseMapName_107", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1584,10 +1486,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[7, 3] == null && value != null)
 					|| (_mapBaseImages[7, 3] != null && !_mapBaseImages[7, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[7, 3];
 					_mapBaseImages[7, 3] = value;
-					OnPropertyChanged("BaseMapName_108", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1603,10 +1502,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[8, 3] == null && value != null)
 					|| (_mapBaseImages[8, 3] != null && !_mapBaseImages[8, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[8, 3];
 					_mapBaseImages[8, 3] = value;
-					OnPropertyChanged("BaseMapName_109", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1622,10 +1518,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[9, 3] == null && value != null)
 					|| (_mapBaseImages[9, 3] != null && !_mapBaseImages[9, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[9, 3];
 					_mapBaseImages[9, 3] = value;
-					OnPropertyChanged("BaseMapName_110", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1641,10 +1534,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[10, 3] == null && value != null)
 					|| (_mapBaseImages[10, 3] != null && !_mapBaseImages[10, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[10, 3];
 					_mapBaseImages[10, 3] = value;
-					OnPropertyChanged("BaseMapName_111", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1660,10 +1550,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[11, 3] == null && value != null)
 					|| (_mapBaseImages[11, 3] != null && !_mapBaseImages[11, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[11, 3];
 					_mapBaseImages[11, 3] = value;
-					OnPropertyChanged("BaseMapName_112", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1679,10 +1566,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[12, 3] == null && value != null)
 					|| (_mapBaseImages[12, 3] != null && !_mapBaseImages[12, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[12, 3];
 					_mapBaseImages[12, 3] = value;
-					OnPropertyChanged("BaseMapName_113", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1698,10 +1582,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[13, 3] == null && value != null)
 					|| (_mapBaseImages[13, 3] != null && !_mapBaseImages[13, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[13, 3];
 					_mapBaseImages[13, 3] = value;
-					OnPropertyChanged("BaseMapName_114", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1717,10 +1598,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[14, 3] == null && value != null)
 					|| (_mapBaseImages[14, 3] != null && !_mapBaseImages[14, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[14, 3];
 					_mapBaseImages[14, 3] = value;
-					OnPropertyChanged("BaseMapName_115", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1736,10 +1614,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[15, 3] == null && value != null)
 					|| (_mapBaseImages[15, 3] != null && !_mapBaseImages[15, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[15, 3];
 					_mapBaseImages[15, 3] = value;
-					OnPropertyChanged("BaseMapName_116", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1755,10 +1630,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[16, 3] == null && value != null)
 					|| (_mapBaseImages[16, 3] != null && !_mapBaseImages[16, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[16, 3];
 					_mapBaseImages[16, 3] = value;
-					OnPropertyChanged("BaseMapName_117", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1774,10 +1646,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[17, 3] == null && value != null)
 					|| (_mapBaseImages[17, 3] != null && !_mapBaseImages[17, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[17, 3];
 					_mapBaseImages[17, 3] = value;
-					OnPropertyChanged("BaseMapName_118", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1793,10 +1662,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[18, 3] == null && value != null)
 					|| (_mapBaseImages[18, 3] != null && !_mapBaseImages[18, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[18, 3];
 					_mapBaseImages[18, 3] = value;
-					OnPropertyChanged("BaseMapName_119", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1812,10 +1678,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[19, 3] == null && value != null)
 					|| (_mapBaseImages[19, 3] != null && !_mapBaseImages[19, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[19, 3];
 					_mapBaseImages[19, 3] = value;
-					OnPropertyChanged("BaseMapName_120", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1831,10 +1694,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[20, 3] == null && value != null)
 					|| (_mapBaseImages[20, 3] != null && !_mapBaseImages[20, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[20, 3];
 					_mapBaseImages[20, 3] = value;
-					OnPropertyChanged("BaseMapName_121", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1850,10 +1710,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[21, 3] == null && value != null)
 					|| (_mapBaseImages[21, 3] != null && !_mapBaseImages[21, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[21, 3];
 					_mapBaseImages[21, 3] = value;
-					OnPropertyChanged("BaseMapName_122", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1869,10 +1726,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[22, 3] == null && value != null)
 					|| (_mapBaseImages[22, 3] != null && !_mapBaseImages[22, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[22, 3];
 					_mapBaseImages[22, 3] = value;
-					OnPropertyChanged("BaseMapName_123", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -1888,10 +1742,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				if ((_mapBaseImages[23, 3] == null && value != null)
 					|| (_mapBaseImages[23, 3] != null && !_mapBaseImages[23, 3].Equals(value)))
 				{
-					string oldValue = _mapBaseImages[23, 3];
 					_mapBaseImages[23, 3] = value;
-					OnPropertyChanged("BaseMapName_124", oldValue, value, true);
-					Refresh();
 				}
 			}
 		}
@@ -2018,9 +1869,7 @@ namespace GadrocsWorkshop.Helios.Controls
 			BaseMapName_123 = reader.ReadElementString("BaseMapName_123");
 			BaseMapName_124 = reader.ReadElementString("BaseMapName_124");
 
-			BeginTriggerBypass(true);
 			Refresh();
-			EndTriggerBypass(true);
 		}
 
 		#endregion
