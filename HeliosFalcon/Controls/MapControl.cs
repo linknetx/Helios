@@ -31,11 +31,8 @@ namespace GadrocsWorkshop.Helios.Controls
 
 	public class MapControl : Gauges.BaseGauge
 	{
-		private HeliosValue _mapVerticalOffset;
-		private HeliosValue _mapHorizontalOffset;
-		private HeliosValue _bullseyeVerticalOffset;
-		private HeliosValue _bullseyeHorizontalOffset;
-		private HeliosValue _mapRotationValue;
+		private FalconInterface _falconInterface;
+
 		private HeliosValue _mapRotationEnable;
 		private HeliosValue _mapScaleChange;
 		private HeliosValue _waypointsVisible;
@@ -90,12 +87,13 @@ namespace GadrocsWorkshop.Helios.Controls
 		private bool _mapRotation_Enabled = false;
 		private bool _mapAutoSelect_Enabled = false;
 		private bool _mapImageChanged = false;
-		private bool _profileStarted = false;
+		private bool _profileFirstStart = true;
 		private bool _imageRefreshPending = false;
 		private bool _imageRefreshPending_15 = false;
 		private bool _imageRefreshPending_30 = false;
 		private bool _imageRefreshPending_60 = false;
-		private string _currentTheater;
+		private string _heliosImagesPath = "";
+		private string _currentTheater = "";
 		private Timer _intervalTimer;
 
 		private string[,] _mapBaseImages = new string[,]
@@ -173,31 +171,6 @@ namespace GadrocsWorkshop.Helios.Controls
 			_MapNoData.IsHidden = true;
 			Components.Add(_MapNoData);
 
-			_mapVerticalOffset = new HeliosValue(this, new BindingValue(0d), "", "Aircraft North Position", "Values for aircraft North position on map.", "(0 to 3359580 ft) or (0 to 6719160 ft)", BindingValueUnits.Numeric);
-			_mapVerticalOffset.Execute += new HeliosActionHandler(MapVerticalOffset_Execute);
-			Actions.Add(_mapVerticalOffset);
-			Values.Add(_mapVerticalOffset);
-
-			_mapHorizontalOffset = new HeliosValue(this, new BindingValue(0d), "", "Aircraft East Position", "Values for aircraft East position on map.", "(0 to 3359580 ft) or (0 to 6719160 ft)", BindingValueUnits.Numeric);
-			_mapHorizontalOffset.Execute += new HeliosActionHandler(MapHorizontalOffset_Execute);
-			Actions.Add(_mapHorizontalOffset);
-			Values.Add(_mapHorizontalOffset);
-
-			_bullseyeVerticalOffset = new HeliosValue(this, new BindingValue(0d), "", "Aircraft Delta From Bullseye North", "Values of aircraft delta from bullseye North.", "(0 to 3359580 ft) or (0 to 6719160 ft)", BindingValueUnits.Numeric);
-			_bullseyeVerticalOffset.Execute += new HeliosActionHandler(BullseyeVerticalOffset_Execute);
-			Actions.Add(_bullseyeVerticalOffset);
-			Values.Add(_bullseyeVerticalOffset);
-
-			_bullseyeHorizontalOffset = new HeliosValue(this, new BindingValue(0d), "", "Aircraft Delta From Bullseye East", "Values of aircraft delta from bullseye East.", "(0 to 3359580 ft) or (0 to 6719160 ft)", BindingValueUnits.Numeric);
-			_bullseyeHorizontalOffset.Execute += new HeliosActionHandler(BullseyeHorizontalOffset_Execute);
-			Actions.Add(_bullseyeHorizontalOffset);
-			Values.Add(_bullseyeHorizontalOffset);
-
-			_mapRotationValue = new HeliosValue(this, new BindingValue(0d), "", "Aircraft Heading", "Values for aircraft heading.", "0 to 360 degrees", BindingValueUnits.Numeric);
-			_mapRotationValue.Execute += new HeliosActionHandler(MapRotationValue_Execute);
-			Actions.Add(_mapRotationValue);
-			Values.Add(_mapRotationValue);
-
 			_mapRotationEnable = new HeliosValue(this, new BindingValue(false), "", "Map North Up vs Heading Up", "Sets North Up or Heading Up map orientation.", "Set true for Heading Up orientation.", BindingValueUnits.Boolean);
 			_mapRotationEnable.Execute += new HeliosActionHandler(MapRotationEnable_Execute);
 			Actions.Add(_mapRotationEnable);
@@ -228,13 +201,25 @@ namespace GadrocsWorkshop.Helios.Controls
 			Actions.Add(_mapManualSelect);
 			Values.Add(_mapManualSelect);
 
+			GetHeliosImagesPath();
 			MapControlResize(true);
 			Resized += new EventHandler(OnMapControl_Resized);
-			IntervalTimer();
+			IntervalTimer_Start();
 		}
 
 
 		#region Actions
+
+		void GetHeliosImagesPath()
+		{
+			string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+			string imagesPath = Path.Combine(docPath, @"Helios\Images");
+
+			if (Directory.Exists(imagesPath))
+			{
+				_heliosImagesPath = imagesPath;
+			}
+		}
 
 		protected override void OnProfileChanged(HeliosProfile oldProfile)
 		{
@@ -243,40 +228,90 @@ namespace GadrocsWorkshop.Helios.Controls
 			if (oldProfile != null)
 			{
 				oldProfile.ProfileStarted -= new EventHandler(Profile_ProfileStarted);
+				oldProfile.ProfileTick -= new EventHandler(Profile_ProfileTick);
+				oldProfile.ProfileStopped -= new EventHandler(Profile_ProfileStopped);
 			}
 
 			if (Profile != null)
 			{
 				Profile.ProfileStarted += new EventHandler(Profile_ProfileStarted);
+				Profile.ProfileTick += new EventHandler(Profile_ProfileTick);
+				Profile.ProfileStopped += new EventHandler(Profile_ProfileStopped);
 			}
 		}
 
 		void Profile_ProfileStarted(object sender, EventArgs e)
 		{
-			if(!_profileStarted)
+			if (Parent.Profile.Interfaces.ContainsKey("Falcon"))
 			{
-				_profileStarted = true;
+				_falconInterface = Parent.Profile.Interfaces["Falcon"] as FalconInterface;
+			}
+
+			if (_profileFirstStart)
+			{
+				_profileFirstStart = false;
 				_intervalTimer.Enabled = true;
 				ShowNoDataPanel();
 				MapScaleChange(2d);
-				WaypointWatcher();
+				WaypointWatcher_Start();
 			}
+		}
+
+		void Profile_ProfileTick(object sender, EventArgs e)
+		{
+			if (_falconInterface != null)
+			{
+				ProcessDataValues();
+			}
+		}
+
+		void Profile_ProfileStopped(object sender, EventArgs e)
+		{
+			_falconInterface = null;
+		}
+
+		void ProcessDataValues()
+		{
+			BindingValue mapRotationAngle = GetValue("HSI", "current heading");
+			MapRotationAngle = mapRotationAngle.DoubleValue;
+
+			BindingValue mapVerticalValue = GetValue("Ownship", "x");
+			MapVerticalValue = mapVerticalValue.DoubleValue;
+
+			BindingValue mapHorizontalValue = GetValue("Ownship", "y");
+			MapHorizontalValue = mapHorizontalValue.DoubleValue;
+
+			BindingValue bullseyeVerticalValue = GetValue("Ownship", "deltaX from bulls");
+			BullseyeVerticalValue = bullseyeVerticalValue.DoubleValue;
+
+			BindingValue bullseyeHorizontalValue = GetValue("Ownship", "deltaY from bulls");
+			BullseyeHorizontalValue = bullseyeHorizontalValue.DoubleValue;
+
+			if (_mapImageChanged)
+			{
+				_mapImageChanged = false;
+				CalculateOffsets();
+			}
+		}
+
+		public BindingValue GetValue(string device, string name)
+		{
+			return _falconInterface?.GetValue(device, name) ?? BindingValue.Empty;
 		}
 
 		public override void Reset()
 		{
 			BeginTriggerBypass(true);
 
-			_mapRotationAngle = 0d;
-			_mapVerticalValue = 0d;
-			_mapHorizontalValue = 0d;
-			_bullseyeVerticalValue = 0d;
-			_bullseyeHorizontalValue = 0d;
+			MapRotationAngle = 0d;
+			MapVerticalValue = 0d;
+			MapHorizontalValue = 0d;
+			BullseyeVerticalValue = 0d;
+			BullseyeHorizontalValue = 0d;
 			_Bullseye.IsHidden = true;
 			_Waypoints.IsHidden = true;
 			_mapRotation_Enabled = false;
 			_mapAutoSelect_Enabled = false;
-			MapRotationAngle_Calculate();
 			MapControlResize(true);
 			MapScaleChange(2d);
 			ShowNoDataPanel();
@@ -296,16 +331,13 @@ namespace GadrocsWorkshop.Helios.Controls
 			_Foreground.IsHidden = true;
 		}
 
-		void WaypointWatcher()
+		void WaypointWatcher_Start()
 		{
-			string docPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			string imagesPath = Path.Combine(docPath, @"Helios\Images");
-
-			if (Directory.Exists(imagesPath))
+			if (!string.IsNullOrEmpty(_heliosImagesPath))
 			{
-				WaypointWatcher_15(imagesPath);
-				WaypointWatcher_30(imagesPath);
-				WaypointWatcher_60(imagesPath);
+				WaypointWatcher_15(_heliosImagesPath);
+				WaypointWatcher_30(_heliosImagesPath);
+				WaypointWatcher_60(_heliosImagesPath);
 			}
 		}
 
@@ -381,7 +413,7 @@ namespace GadrocsWorkshop.Helios.Controls
 			_imageRefreshPending_60 = true;
 		}
 
-		void IntervalTimer()
+		void IntervalTimer_Start()
 		{
 			_intervalTimer = new System.Timers.Timer();
 			_intervalTimer.Interval = 2000;
@@ -649,14 +681,6 @@ namespace GadrocsWorkshop.Helios.Controls
 			}
 		}
 
-		void MapVerticalOffset_Execute(object action, HeliosActionEventArgs e)
-		{
-			_mapVerticalOffset.SetValue(e.Value, e.BypassCascadingTriggers);
-			_mapVerticalValue = _mapVerticalOffset.Value.DoubleValue;
-			MapVerticalOffset_Calculate(_mapVerticalValue);
-			HideNoDataPanel();
-		}
-
 		void MapVerticalOffset_Calculate(double vValue)
 		{
 			double mapVerticalValue = vValue - _mapSizeFeet / 2;
@@ -671,22 +695,6 @@ namespace GadrocsWorkshop.Helios.Controls
 				_Map.VerticalOffset = _mapInitialVertical + (mapVerticalValue / _mapSizeFeet * _mapBaseScale * _mapScaleMultiplier * _mapSizeMultiplier * 200);
 				_Waypoints.VerticalOffset = _Map.VerticalOffset;
 			}
-
-			if (_mapImageChanged)
-			{
-				_mapImageChanged = false;
-				MapHorizontalOffset_Calculate(_mapHorizontalValue);
-				BullseyeVerticalOffset_Calculate(_bullseyeVerticalValue);
-				BullseyeHorizontalOffset_Calculate(_bullseyeHorizontalValue);
-			}
-		}
-
-		void MapHorizontalOffset_Execute(object action, HeliosActionEventArgs e)
-		{
-			_mapHorizontalOffset.SetValue(e.Value, e.BypassCascadingTriggers);
-			_mapHorizontalValue = _mapHorizontalOffset.Value.DoubleValue;
-			MapHorizontalOffset_Calculate(_mapHorizontalValue);
-			HideNoDataPanel();
 		}
 
 		void MapHorizontalOffset_Calculate(double hValue)
@@ -703,22 +711,6 @@ namespace GadrocsWorkshop.Helios.Controls
 				_Map.HorizontalOffset = _mapInitialHorizontal - (mapHorizontalValue / _mapSizeFeet * _mapModifiedScale * 200);
 				_Waypoints.HorizontalOffset = _Map.HorizontalOffset;
 			}
-
-			if (_mapImageChanged)
-			{
-				_mapImageChanged = false;
-				MapVerticalOffset_Calculate(_mapVerticalValue);
-				BullseyeVerticalOffset_Calculate(_bullseyeVerticalValue);
-				BullseyeHorizontalOffset_Calculate(_bullseyeHorizontalValue);
-			}
-		}
-
-		void BullseyeVerticalOffset_Execute(object action, HeliosActionEventArgs e)
-		{
-			_bullseyeVerticalOffset.SetValue(e.Value, e.BypassCascadingTriggers);
-			_bullseyeVerticalValue = _bullseyeVerticalOffset.Value.DoubleValue;
-			BullseyeVerticalOffset_Calculate(_bullseyeVerticalValue);
-			HideNoDataPanel();
 		}
 
 		void BullseyeVerticalOffset_Calculate(double bullseyeVerticalValue)
@@ -731,22 +723,6 @@ namespace GadrocsWorkshop.Helios.Controls
 			{
 				_Bullseye.VerticalOffset = _mapInitialVertical + (bullseyeVerticalValue / _mapSizeFeet * _mapBaseScale * _mapScaleMultiplier * _mapSizeMultiplier * 200);
 			}
-
-			if (_mapImageChanged)
-			{
-				_mapImageChanged = false;
-				MapVerticalOffset_Calculate(_mapVerticalValue);
-				MapHorizontalOffset_Calculate(_mapHorizontalValue);
-				BullseyeHorizontalOffset_Calculate(_bullseyeHorizontalValue);
-			}
-		}
-
-		void BullseyeHorizontalOffset_Execute(object action, HeliosActionEventArgs e)
-		{
-			_bullseyeHorizontalOffset.SetValue(e.Value, e.BypassCascadingTriggers);
-			_bullseyeHorizontalValue = _bullseyeHorizontalOffset.Value.DoubleValue;
-			BullseyeHorizontalOffset_Calculate(_bullseyeHorizontalValue);
-			HideNoDataPanel();
 		}
 
 		void BullseyeHorizontalOffset_Calculate(double bullseyeHorizontalValue)
@@ -759,39 +735,23 @@ namespace GadrocsWorkshop.Helios.Controls
 			{
 				_Bullseye.HorizontalOffset = _mapInitialHorizontal - (bullseyeHorizontalValue / _mapSizeFeet * _mapModifiedScale * 200);
 			}
-
-			if (_mapImageChanged)
-			{
-				_mapImageChanged = false;
-				MapVerticalOffset_Calculate(_mapVerticalValue);
-				MapHorizontalOffset_Calculate(_mapHorizontalValue);
-				BullseyeVerticalOffset_Calculate(_bullseyeVerticalValue);
-			}
 		}
 			   		
-		void MapRotationValue_Execute(object action, HeliosActionEventArgs e)
-		{
-			_mapRotationValue.SetValue(e.Value, e.BypassCascadingTriggers);
-			_mapRotationAngle = _mapRotationValue.Value.DoubleValue;
-			MapRotationAngle_Calculate();
-			HideNoDataPanel();
-		}
-
 		void MapRotationEnable_Execute(object action, HeliosActionEventArgs e)
 		{
 			_mapRotationEnable.SetValue(e.Value, e.BypassCascadingTriggers);
 			_mapRotation_Enabled = _mapRotationEnable.Value.BoolValue;
-			MapRotationAngle_Calculate();
+			MapRotationAngle_Calculate(MapRotationAngle);
 		}
 
-		void MapRotationAngle_Calculate()
+		void MapRotationAngle_Calculate(double angle)
 		{
 			if (_mapRotation_Enabled)
 			{
-				_Map.Rotation = -_mapRotationAngle;
-				_Waypoints.Rotation = -_mapRotationAngle;
-				_Bullseye.Rotation = -_mapRotationAngle;
-				_RangeRings.Rotation = -_mapRotationAngle;
+				_Map.Rotation = -angle;
+				_Waypoints.Rotation = -angle;
+				_Bullseye.Rotation = -angle;
+				_RangeRings.Rotation = -angle;
 				_Aircraft.Rotation = 0d;
 			}
 			else
@@ -800,16 +760,7 @@ namespace GadrocsWorkshop.Helios.Controls
 				_Waypoints.Rotation = 0d;
 				_Bullseye.Rotation = 0d;
 				_RangeRings.Rotation = 0d;
-				_Aircraft.Rotation = _mapRotationAngle;
-			}
-
-			if (_mapImageChanged)
-			{
-				_mapImageChanged = false;
-				MapVerticalOffset_Calculate(_mapVerticalValue);
-				MapHorizontalOffset_Calculate(_mapHorizontalValue);
-				BullseyeVerticalOffset_Calculate(_bullseyeVerticalValue);
-				BullseyeHorizontalOffset_Calculate(_bullseyeHorizontalValue);
+				_Aircraft.Rotation = angle;
 			}
 		}
 
@@ -849,16 +800,127 @@ namespace GadrocsWorkshop.Helios.Controls
 
 		void CalculateOffsets()
 		{
-			MapVerticalOffset_Calculate(_mapVerticalValue);
-			MapHorizontalOffset_Calculate(_mapHorizontalValue);
-			BullseyeVerticalOffset_Calculate(_bullseyeVerticalValue);
-			BullseyeHorizontalOffset_Calculate(_bullseyeHorizontalValue);
+			MapRotationAngle_Calculate(MapRotationAngle);
+			MapVerticalOffset_Calculate(MapVerticalValue);
+			MapHorizontalOffset_Calculate(MapHorizontalValue);
+			BullseyeVerticalOffset_Calculate(BullseyeVerticalValue);
+			BullseyeHorizontalOffset_Calculate(BullseyeHorizontalValue);
 		}
 
 		#endregion
 
 
 		#region Properties
+
+		public double MapRotationAngle
+		{
+			get
+			{
+				return _mapRotationAngle;
+			}
+			set
+			{
+				if ((_mapRotationAngle == 0d && value != 0)
+					|| (_mapRotationAngle != 0d && !_mapRotationAngle.Equals(value)))
+				{
+					double oldValue = _mapRotationAngle;
+					_mapRotationAngle = value;
+					OnPropertyChanged("MapRotationAngle", oldValue, value, true);
+					{
+						MapRotationAngle_Calculate(_mapRotationAngle);
+						HideNoDataPanel();
+					}
+				}
+			}
+		}
+
+		public double MapVerticalValue
+		{
+			get
+			{
+				return _mapVerticalValue;
+			}
+			set
+			{
+				if ((_mapVerticalValue == 0d && value != 0)
+					|| (_mapVerticalValue != 0d && !_mapVerticalValue.Equals(value)))
+				{
+					double oldValue = _mapVerticalValue;
+					_mapVerticalValue = value;
+					OnPropertyChanged("MapVerticalValue", oldValue, value, true);
+					{
+						MapVerticalOffset_Calculate(_mapVerticalValue);
+						HideNoDataPanel();
+					}
+				}
+			}
+		}
+
+		public double MapHorizontalValue
+		{
+			get
+			{
+				return _mapHorizontalValue;
+			}
+			set
+			{
+				if ((_mapHorizontalValue == 0d && value != 0)
+					|| (_mapHorizontalValue != 0d && !_mapHorizontalValue.Equals(value)))
+				{
+					double oldValue = _mapHorizontalValue;
+					_mapHorizontalValue = value;
+					OnPropertyChanged("MapHorizontalValue", oldValue, value, true);
+					{
+						MapHorizontalOffset_Calculate(_mapHorizontalValue);
+						HideNoDataPanel();
+					}
+				}
+			}
+		}
+
+		public double BullseyeVerticalValue
+		{
+			get
+			{
+				return _bullseyeVerticalValue;
+			}
+			set
+			{
+				if ((_bullseyeVerticalValue == 0d && value != 0)
+					|| (_bullseyeVerticalValue != 0d && !_bullseyeVerticalValue.Equals(value)))
+				{
+					double oldValue = _bullseyeVerticalValue;
+					_bullseyeVerticalValue = value;
+					OnPropertyChanged("BullseyeVerticalValue", oldValue, value, true);
+					{
+						BullseyeVerticalOffset_Calculate(_bullseyeVerticalValue);
+						HideNoDataPanel();
+					}
+				}
+			}
+		}
+
+		public double BullseyeHorizontalValue
+		{
+			get
+			{
+				return _bullseyeHorizontalValue;
+			}
+			set
+			{
+				if ((_bullseyeHorizontalValue == 0d && value != 0)
+					|| (_bullseyeHorizontalValue != 0d && !_bullseyeHorizontalValue.Equals(value)))
+				{
+					double oldValue = _bullseyeHorizontalValue;
+					_bullseyeHorizontalValue = value;
+					OnPropertyChanged("BullseyeHorizontalValue", oldValue, value, true);
+					{
+						BullseyeHorizontalOffset_Calculate(_bullseyeHorizontalValue);
+						HideNoDataPanel();
+					}
+				}
+			}
+		}
 
 		public string WaypointImage_15
 		{
