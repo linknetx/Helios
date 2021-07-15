@@ -27,11 +27,18 @@ namespace GadrocsWorkshop.Helios.Controls
 	using System.Linq;
 	using System.Globalization;
 
-	[HeliosControl("Helios.Base.MapControl", "Map Control", "Falcon Simulator", typeof(Gauges.GaugeRenderer))]
+	[HeliosControl("Helios.Falcon.MapControl", "Map Control", "Falcon Simulator", typeof(Gauges.GaugeRenderer))]
 
 	public class MapControl : Gauges.BaseGauge
 	{
 		private FalconInterface _falconInterface;
+
+		// For testing purposes only - remove for release version
+		private HeliosValue _mapVerticalOffset;
+		private HeliosValue _mapHorizontalOffset;
+		private HeliosValue _bullseyeVerticalOffset;
+		private HeliosValue _bullseyeHorizontalOffset;
+		private HeliosValue _mapRotationValue;
 
 		private HeliosValue _mapRotationEnable;
 		private HeliosValue _mapScaleChange;
@@ -171,6 +178,36 @@ namespace GadrocsWorkshop.Helios.Controls
 			_MapNoData.IsHidden = true;
 			Components.Add(_MapNoData);
 
+			// For testing purposes only - remove for release version
+			_mapVerticalOffset = new HeliosValue(this, new BindingValue(0d), "", "Aircraft North Position", "Values for aircraft North position on map.", "(0 to 3359580 ft) or (0 to 6719160 ft)", BindingValueUnits.Numeric);
+			_mapVerticalOffset.Execute += new HeliosActionHandler(MapVerticalOffset_Execute);
+			Actions.Add(_mapVerticalOffset);
+			Values.Add(_mapVerticalOffset);
+
+			// For testing purposes only - remove for release version
+			_mapHorizontalOffset = new HeliosValue(this, new BindingValue(0d), "", "Aircraft East Position", "Values for aircraft East position on map.", "(0 to 3359580 ft) or (0 to 6719160 ft)", BindingValueUnits.Numeric);
+			_mapHorizontalOffset.Execute += new HeliosActionHandler(MapHorizontalOffset_Execute);
+			Actions.Add(_mapHorizontalOffset);
+			Values.Add(_mapHorizontalOffset);
+
+			// For testing purposes only - remove for release version
+			_bullseyeVerticalOffset = new HeliosValue(this, new BindingValue(0d), "", "Aircraft Delta From Bullseye North", "Values of aircraft delta from bullseye North.", "(0 to 3359580 ft) or (0 to 6719160 ft)", BindingValueUnits.Numeric);
+			_bullseyeVerticalOffset.Execute += new HeliosActionHandler(BullseyeVerticalOffset_Execute);
+			Actions.Add(_bullseyeVerticalOffset);
+			Values.Add(_bullseyeVerticalOffset);
+
+			// For testing purposes only - remove for release version
+			_bullseyeHorizontalOffset = new HeliosValue(this, new BindingValue(0d), "", "Aircraft Delta From Bullseye East", "Values of aircraft delta from bullseye East.", "(0 to 3359580 ft) or (0 to 6719160 ft)", BindingValueUnits.Numeric);
+			_bullseyeHorizontalOffset.Execute += new HeliosActionHandler(BullseyeHorizontalOffset_Execute);
+			Actions.Add(_bullseyeHorizontalOffset);
+			Values.Add(_bullseyeHorizontalOffset);
+
+			// For testing purposes only - remove for release version
+			_mapRotationValue = new HeliosValue(this, new BindingValue(0d), "", "Aircraft Heading", "Values for aircraft heading.", "0 to 360 degrees", BindingValueUnits.Numeric);
+			_mapRotationValue.Execute += new HeliosActionHandler(MapRotationValue_Execute);
+			Actions.Add(_mapRotationValue);
+			Values.Add(_mapRotationValue);
+
 			_mapRotationEnable = new HeliosValue(this, new BindingValue(false), "", "Map North Up vs Heading Up", "Sets North Up or Heading Up map orientation.", "Set true for Heading Up orientation.", BindingValueUnits.Boolean);
 			_mapRotationEnable.Execute += new HeliosActionHandler(MapRotationEnable_Execute);
 			Actions.Add(_mapRotationEnable);
@@ -272,20 +309,22 @@ namespace GadrocsWorkshop.Helios.Controls
 
 		void ProcessDataValues()
 		{
-			BindingValue mapRotationAngle = GetValue("HSI", "current heading");
-			MapRotationAngle = mapRotationAngle.DoubleValue;
+			// For testing purposes only - restore these for release version
 
-			BindingValue mapVerticalValue = GetValue("Ownship", "x");
-			MapVerticalValue = mapVerticalValue.DoubleValue;
+			//BindingValue mapRotationAngle = GetValue("HSI", "current heading");
+			//MapRotationAngle = mapRotationAngle.DoubleValue;
 
-			BindingValue mapHorizontalValue = GetValue("Ownship", "y");
-			MapHorizontalValue = mapHorizontalValue.DoubleValue;
+			//BindingValue mapVerticalValue = GetValue("Ownship", "x");
+			//MapVerticalValue = mapVerticalValue.DoubleValue;
 
-			BindingValue bullseyeVerticalValue = GetValue("Ownship", "deltaX from bulls");
-			BullseyeVerticalValue = bullseyeVerticalValue.DoubleValue;
+			//BindingValue mapHorizontalValue = GetValue("Ownship", "y");
+			//MapHorizontalValue = mapHorizontalValue.DoubleValue;
 
-			BindingValue bullseyeHorizontalValue = GetValue("Ownship", "deltaY from bulls");
-			BullseyeHorizontalValue = bullseyeHorizontalValue.DoubleValue;
+			//BindingValue bullseyeVerticalValue = GetValue("Ownship", "deltaX from bulls");
+			//BullseyeVerticalValue = bullseyeVerticalValue.DoubleValue;
+
+			//BindingValue bullseyeHorizontalValue = GetValue("Ownship", "deltaY from bulls");
+			//BullseyeHorizontalValue = bullseyeHorizontalValue.DoubleValue;
 
 			if (_mapImageChanged)
 			{
@@ -294,7 +333,7 @@ namespace GadrocsWorkshop.Helios.Controls
 			}
 		}
 
-		public BindingValue GetValue(string device, string name)
+		private BindingValue GetValue(string device, string name)
 		{
 			return _falconInterface?.GetValue(device, name) ?? BindingValue.Empty;
 		}
@@ -682,6 +721,14 @@ namespace GadrocsWorkshop.Helios.Controls
 			}
 		}
 
+		// For testing purposes only - remove for release version
+		void MapVerticalOffset_Execute(object action, HeliosActionEventArgs e)
+		{
+			_mapVerticalOffset.SetValue(e.Value, e.BypassCascadingTriggers);
+			MapVerticalValue = _mapVerticalOffset.Value.DoubleValue;
+			MapVerticalOffset_Calculate(MapVerticalValue);
+		}
+
 		void MapVerticalOffset_Calculate(double vValue)
 		{
 			double mapVerticalValue = vValue - _mapSizeFeet / 2;
@@ -696,6 +743,14 @@ namespace GadrocsWorkshop.Helios.Controls
 				_Map.VerticalOffset = _mapInitialVertical + (mapVerticalValue / _mapSizeFeet * _mapBaseScale * _mapScaleMultiplier * _mapSizeMultiplier * 200);
 				_Waypoints.VerticalOffset = _Map.VerticalOffset;
 			}
+		}
+
+		// For testing purposes only - remove for release version
+		void MapHorizontalOffset_Execute(object action, HeliosActionEventArgs e)
+		{
+			_mapHorizontalOffset.SetValue(e.Value, e.BypassCascadingTriggers);
+			MapHorizontalValue = _mapHorizontalOffset.Value.DoubleValue;
+			MapHorizontalOffset_Calculate(MapHorizontalValue);
 		}
 
 		void MapHorizontalOffset_Calculate(double hValue)
@@ -714,6 +769,14 @@ namespace GadrocsWorkshop.Helios.Controls
 			}
 		}
 
+		// For testing purposes only - remove for release version
+		void BullseyeVerticalOffset_Execute(object action, HeliosActionEventArgs e)
+		{
+			_bullseyeVerticalOffset.SetValue(e.Value, e.BypassCascadingTriggers);
+			BullseyeVerticalValue = _bullseyeVerticalOffset.Value.DoubleValue;
+			BullseyeVerticalOffset_Calculate(BullseyeVerticalValue);
+		}
+
 		void BullseyeVerticalOffset_Calculate(double bullseyeVerticalValue)
 		{
 			if (Height >= Width)
@@ -724,6 +787,14 @@ namespace GadrocsWorkshop.Helios.Controls
 			{
 				_Bullseye.VerticalOffset = _mapInitialVertical + (bullseyeVerticalValue / _mapSizeFeet * _mapBaseScale * _mapScaleMultiplier * _mapSizeMultiplier * 200);
 			}
+		}
+
+		// For testing purposes only - remove for release version
+		void BullseyeHorizontalOffset_Execute(object action, HeliosActionEventArgs e)
+		{
+			_bullseyeHorizontalOffset.SetValue(e.Value, e.BypassCascadingTriggers);
+			BullseyeHorizontalValue = _bullseyeHorizontalOffset.Value.DoubleValue;
+			BullseyeHorizontalOffset_Calculate(BullseyeHorizontalValue);
 		}
 
 		void BullseyeHorizontalOffset_Calculate(double bullseyeHorizontalValue)
@@ -737,7 +808,15 @@ namespace GadrocsWorkshop.Helios.Controls
 				_Bullseye.HorizontalOffset = _mapInitialHorizontal - (bullseyeHorizontalValue / _mapSizeFeet * _mapModifiedScale * 200);
 			}
 		}
-			   		
+
+		// For testing purposes only - remove for release version	   		
+		void MapRotationValue_Execute(object action, HeliosActionEventArgs e)
+		{
+			_mapRotationValue.SetValue(e.Value, e.BypassCascadingTriggers);
+			MapRotationAngle = _mapRotationValue.Value.DoubleValue;
+			MapRotationAngle_Calculate(MapRotationAngle);
+		}
+
 		void MapRotationEnable_Execute(object action, HeliosActionEventArgs e)
 		{
 			_mapRotationEnable.SetValue(e.Value, e.BypassCascadingTriggers);
@@ -813,7 +892,7 @@ namespace GadrocsWorkshop.Helios.Controls
 
 		#region Properties
 
-		public double MapRotationAngle
+		private double MapRotationAngle
 		{
 			get
 			{
@@ -835,7 +914,7 @@ namespace GadrocsWorkshop.Helios.Controls
 			}
 		}
 
-		public double MapVerticalValue
+		private double MapVerticalValue
 		{
 			get
 			{
@@ -857,7 +936,7 @@ namespace GadrocsWorkshop.Helios.Controls
 			}
 		}
 
-		public double MapHorizontalValue
+		private double MapHorizontalValue
 		{
 			get
 			{
@@ -879,7 +958,7 @@ namespace GadrocsWorkshop.Helios.Controls
 			}
 		}
 
-		public double BullseyeVerticalValue
+		private double BullseyeVerticalValue
 		{
 			get
 			{
@@ -901,7 +980,7 @@ namespace GadrocsWorkshop.Helios.Controls
 			}
 		}
 
-		public double BullseyeHorizontalValue
+		private double BullseyeHorizontalValue
 		{
 			get
 			{
